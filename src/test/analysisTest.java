@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.File;
+
 import org.junit.Test;
 
 import analysis.Analysis;
@@ -15,7 +17,7 @@ public class analysisTest {
 		
 		String csv = getClass().getResource("/testCSV.csv").getFile();
 		
-		analysis = new Analysis(csv);
+		analysis = new Analysis(csv,  new File("week.jpg"), new File("daytime.jpg"));
 		
 		//test top 5 items
 		assertEquals("Kaffee / Tee", analysis.getTopItems().get(0));

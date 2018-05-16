@@ -2,6 +2,7 @@ package analysis;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -24,30 +25,39 @@ import weka.filters.unsupervised.attribute.NumericCleaner;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.Remove;
 
-public class Analysis {
+public class Analysis implements Serializable{
 
 	File weekDayChart;
 	File daytimeChart;
 	List<String> topItems;
 	
-	public Analysis(String csv) throws Exception {
+	public Analysis() {
+		weekDayChart = new File("");
+		daytimeChart = new File("");
+		topItems = new ArrayList<>();
+	}
+	
+	public Analysis(String csv, File week, File daytime) throws Exception {
 		
 		Instances data;
 		List<Item> items;
 		topItems = new ArrayList<>();
 		
-		// CSV-Datei laden
+		//load CSV-File into Weka
 		CSVLoader loader = new CSVLoader();
 		loader.setSource(new File(csv));
 		data = loader.getDataSet();			
 		data = numericToNominal(data);
 		
+		//get Top 5 items from data
 		items = getTop5Items(data);
 		for(Item i: items) {
 			topItems.add(i.toString());
 		}
 		
-		//createCharts(data, weekDayChart, daytimeChart);
+		weekDayChart = week;
+		daytimeChart = daytime;
+		createCharts(data, weekDayChart, daytimeChart);
 		
 	}
 	
@@ -89,7 +99,7 @@ public class Analysis {
 		
 	}
 	
-	public static void createCharts(Instances data, File week, File daytime) throws Exception {
+	public void createCharts(Instances data, File week, File daytime) throws Exception {
 		
 		//extract weekday attribute from data
 		Instances einkaufsTage = new Instances(data);
@@ -177,9 +187,31 @@ public class Analysis {
 		ChartUtilities.saveChartAsJPEG(daytime, chart, 800, 500);		
 		
 	}
-	
-	public List<String> getTopItems(){
+
+	public File getWeekDayChart() {
+		return weekDayChart;
+	}
+
+	public void setWeekDayChart(File weekDayChart) {
+		this.weekDayChart = weekDayChart;
+	}
+
+	public File getDaytimeChart() {
+		return daytimeChart;
+	}
+
+	public void setDaytimeChart(File daytimeChart) {
+		this.daytimeChart = daytimeChart;
+	}
+
+	public List<String> getTopItems() {
 		return topItems;
 	}
+
+	public void setTopItems(List<String> topItems) {
+		this.topItems = topItems;
+	}
+	
+	
 	
 }

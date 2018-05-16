@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+
+import analysis.Analysis;
 
 
 
@@ -32,28 +35,38 @@ public class DateiEmpfangen extends HttpServlet {
      */
     public DateiEmpfangen() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		Part file = request.getPart("file");
-		Path folder = Paths.get("C:/Users/User/CSV-Dateien");
-		Files.createDirectories(folder);
-		Path filePath = Paths.get(folder.toString(), file.getName());
-		Files.createFile(filePath);
-		file.write(filePath.toString());
+		
+		Part csvPart = request.getPart("file");
+		String csvName = Paths.get(csvPart.getSubmittedFileName()).getFileName().toString();
+		Analysis analysis = null;
+		
+		File week = new File(this.getServletContext().getRealPath("/") + "/week.jpg");
+		File daytime =  new File(this.getServletContext().getRealPath("/") + "/daytime.jpg");
+		
+		System.out.println(week.getAbsolutePath());
+		
+		try {
+			analysis = new Analysis(csvName, week, daytime);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		request.setAttribute("analysis", analysis);
+		
+		RequestDispatcher view = request.getRequestDispatcher("analysis.jsp");
+		view.forward(request, response);
+		
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
