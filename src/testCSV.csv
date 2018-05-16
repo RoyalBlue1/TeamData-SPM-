@@ -1,0 +1,6 @@
+Geschlecht,Alter,Kinder,Familienstand,Berufstätig,Einkaufstag,Einkaufsuhrzeit,Süßwaren,Alkoholfreie Getränke,Frischfleisch,Obst / Gemüse,Wein / Sekt,Tiefkühlware,Bier,Wurstwaren SB,Drogerieartikel,Konserven,Kaffee / Tee,Fertiggerichte,Spirituosen,Milchprodukte,Käse Theke,Backwaren,Chips
+w,18-30,ja,Partnerschaft,ja,Donnerstag,10-12 Uhr,1,0,1,0,0,0,1,0,1,0,1,1,0,0,0,1,1
+w,31-40,ja,Partnerschaft,ja,Mittwoch,10-12 Uhr,0,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1
+w,18-30,nein,Partnerschaft,nein,Mittwoch,>17 Uhr,0,1,0,0,0,1,0,0,0,1,1,0,0,1,0,1,1
+m,>60,nein,ledig,nein,Samstag,<10 Uhr,1,1,1,0,0,1,0,1,0,1,1,1,0,0,1,1,1
+m,18-30,ja,Partnerschaft,ja,Mittwoch,10-12 Uhr,0,1,0,1,0,1,0,0,1,1,1,0,1,0,0,1,0

@@ -28,20 +28,26 @@ public class Analysis {
 
 	File weekDayChart;
 	File daytimeChart;
-	List<Item> topItems;
+	List<String> topItems;
 	
-	public Analysis(File csv) throws Exception {
+	public Analysis(String csv) throws Exception {
 		
 		Instances data;
+		List<Item> items;
+		topItems = new ArrayList<>();
 		
 		// CSV-Datei laden
 		CSVLoader loader = new CSVLoader();
-		loader.setSource(csv);
+		loader.setSource(new File(csv));
 		data = loader.getDataSet();			
 		data = numericToNominal(data);
 		
-		topItems = getTop5Items(data);
-		createCharts(data, weekDayChart, daytimeChart);
+		items = getTop5Items(data);
+		for(Item i: items) {
+			topItems.add(i.toString());
+		}
+		
+		//createCharts(data, weekDayChart, daytimeChart);
 		
 	}
 	
@@ -170,6 +176,10 @@ public class Analysis {
 		//Save Bar Chart
 		ChartUtilities.saveChartAsJPEG(daytime, chart, 800, 500);		
 		
+	}
+	
+	public List<String> getTopItems(){
+		return topItems;
 	}
 	
 }
