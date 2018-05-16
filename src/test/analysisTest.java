@@ -11,7 +11,7 @@ public class analysisTest {
 	@Test
 	public void test() throws Exception {
 		
-		Analysis analysis ;
+		Analysis analysis;
 		
 		String csv = getClass().getResource("/testCSV.csv").getFile();
 		

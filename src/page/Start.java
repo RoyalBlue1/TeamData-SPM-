@@ -43,7 +43,7 @@ public class Start extends HttpServlet {
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		PrintWriter out;
 		try {
-			RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/DateiHochladen.jsp");
+			RequestDispatcher view = request.getRequestDispatcher("/DateiHochladen.jsp");
 			view.forward(request, response);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
