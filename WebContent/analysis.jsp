@@ -15,7 +15,7 @@
 
 		<title>Kauf Dort - Analyse</title>
 		
-		<jsp:useBean id = "analysis" class = "analysis.Analysis" scope="request" />
+		<jsp:useBean id = "analysis" class = "analysis.Analysis" scope="session" />
 		
 	</head>
 	<body>
@@ -26,7 +26,7 @@
 				</div>
 				
 				<div class="sidebar-item sidebar-block">
-					<a class="sidebar-link" href=""><i class="fa fa-file"></i> Datei hochladen</a>
+					<a class="sidebar-link" href="Start"><i class="fa fa-file"></i> Datei hochladen</a>
 				</div>
 				<div class="sidebar-block">
 					<div class="sidebar-heading">Letzte Ergebnisse</div>
@@ -56,13 +56,26 @@
 					<div>
 						<h1><span class="badge badge-secondary">Ergebnisse der Analyse</span></h1>
 					</div>
+					
+					<ul class="list-group" style="padding-bottom: 20px;">
+						<li class="list-group-item list-group-item-secondary">
+							<h4>Top 5 am häufigsten gekaufte Waren</h4>
+						</li>
+						<% for(int i=0; i<analysis.getTopItems().size(); i++){ %>
+						
+							<li class="list-group-item">
+								<h5><%= (i+1) + ". " + analysis.getTopItems().get(i) %></h5>
+							</li>
+						
+						<% } %>
+					</ul>
 
 					<ul class="list-group" style="padding-bottom: 20px;">
 						<li class="list-group-item list-group-item-secondary">
 							<h4>Kundenanzahl am jeweiligen Wochentag</h4>
 						</li>
 						<li class="list-group-item">
-							<img src="<%= analysis.getWeekDayChart().getAbsolutePath() %>" style="max-width: 100%">
+							<img alt="" src="BarChartWeekday">
 						</li>
 					</ul>
 
@@ -71,9 +84,10 @@
 							<h4>Kundenanzahl um die jeweiligen Uhrzeit</h4>
 						</li>
 						<li class="list-group-item">
-							<img src="<%= analysis.getDaytimeChart().getAbsolutePath() %>" style="max-width: 100%">
+							<img src="BarChartDaytime">
 						</li>
 					</ul>
+					
 				</div>
 			</div>
 		</div>	

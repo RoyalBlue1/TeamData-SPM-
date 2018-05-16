@@ -46,17 +46,14 @@ public class DateiEmpfangen extends HttpServlet {
 		String csvName = Paths.get(csvPart.getSubmittedFileName()).getFileName().toString();
 		Analysis analysis = null;
 		
-		File week = new File(this.getServletContext().getRealPath("/") + "/week.jpg");
-		File daytime =  new File(this.getServletContext().getRealPath("/") + "/daytime.jpg");
-		
-		System.out.println(week.getAbsolutePath());
-		
 		try {
-			analysis = new Analysis(csvName, week, daytime);
+			analysis = new Analysis(csvName);
+			System.out.println("analyse");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		request.setAttribute("analysis", analysis);
+		
+		request.getSession().setAttribute("analysis", analysis);
 		
 		RequestDispatcher view = request.getRequestDispatcher("analysis.jsp");
 		view.forward(request, response);

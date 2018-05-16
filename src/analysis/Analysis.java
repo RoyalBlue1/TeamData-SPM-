@@ -1,7 +1,7 @@
 package analysis;
 
-import java.awt.Color;
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,15 +9,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.StandardChartTheme;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.renderer.category.StandardBarPainter;
-import org.jfree.data.category.DefaultCategoryDataset;
-
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 import weka.filters.Filter;
@@ -27,17 +18,18 @@ import weka.filters.unsupervised.attribute.Remove;
 
 public class Analysis implements Serializable{
 
-	File weekDayChart;
-	File daytimeChart;
+	private static final long serialVersionUID = 1L;
 	List<String> topItems;
+	Map<String, Integer> customersWeekday;
+	Map<String, Integer> customersDaytime;
 	
 	public Analysis() {
-		weekDayChart = new File("");
-		daytimeChart = new File("");
+		customersDaytime = new HashMap<>();
+		customersWeekday = new HashMap<>();
 		topItems = new ArrayList<>();
 	}
 	
-	public Analysis(String csv, File week, File daytime) throws Exception {
+	public Analysis(String csv) throws Exception {
 		
 		Instances data;
 		List<Item> items;
@@ -46,7 +38,7 @@ public class Analysis implements Serializable{
 		//load CSV-File into Weka
 		CSVLoader loader = new CSVLoader();
 		loader.setSource(new File(csv));
-		data = loader.getDataSet();			
+		data = loader.getDataSet();	
 		data = numericToNominal(data);
 		
 		//get Top 5 items from data
@@ -55,9 +47,11 @@ public class Analysis implements Serializable{
 			topItems.add(i.toString());
 		}
 		
-		weekDayChart = week;
-		daytimeChart = daytime;
-		createCharts(data, weekDayChart, daytimeChart);
+		//get customers per weekday
+		customersWeekday = customersPerWeekday(data);
+		
+		//get customers per daytime
+		customersDaytime = customersPerDaytime(data);
 		
 	}
 	
@@ -79,7 +73,7 @@ public class Analysis implements Serializable{
 		
 	}
 	
-	public List<Item> getTop5Items(Instances data){
+	private List<Item> getTop5Items(Instances data){
 		
 		ArrayList<Item> items = new ArrayList<>();
 		
@@ -87,6 +81,7 @@ public class Analysis implements Serializable{
 		for(int i = 7; i < 24; i++) {
 			items.add(new Item(data.attribute(i).toString(), data.attributeStats(i).nominalCounts[0]));
 		}
+		
 		
 		Collections.sort(items);
 		
@@ -99,8 +94,7 @@ public class Analysis implements Serializable{
 		
 	}
 	
-	public void createCharts(Instances data, File week, File daytime) throws Exception {
-		
+	private Map<String, Integer> customersPerWeekday(Instances data) throws Exception {
 		//extract weekday attribute from data
 		Instances einkaufsTage = new Instances(data);
 		Remove remove = new Remove();
@@ -117,44 +111,20 @@ public class Analysis implements Serializable{
 			mapCustomerToDay.put(e.nextElement().toString(), einkaufsTage.attributeStats(0).nominalCounts[i]);
 		}
 		
-		//Insert data into Chart
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		dataset.addValue(mapCustomerToDay.get("Montag"), "", "Montag");
-		dataset.addValue(mapCustomerToDay.get("Dienstag"), "", "Dienstag");
-		dataset.addValue(mapCustomerToDay.get("Mittwoch"), "", "Mittwoch");
-		dataset.addValue(mapCustomerToDay.get("Donnerstag"), "", "Donnerstag");
-		dataset.addValue(mapCustomerToDay.get("Freitag"), "", "Freitag");
-		dataset.addValue(mapCustomerToDay.get("Samstag"), "", "Samstag");
-		
-		JFreeChart chart = ChartFactory.createBarChart("", "Wochentag", "Kunden", dataset);
-		chart.removeLegend();
-		
-		//Change Style of Chart
-		StandardChartTheme theme = (StandardChartTheme)org.jfree.chart.StandardChartTheme.createJFreeTheme();
-		theme.setRangeGridlinePaint( Color.decode("#C0C0C0"));
-		theme.setPlotBackgroundPaint( Color.white );
-	    theme.setChartBackgroundPaint( Color.white );
-	    theme.setBarPainter(new StandardBarPainter());
-	    theme.apply(chart);
-		CategoryPlot plot = chart.getCategoryPlot();
-		plot.setOutlineVisible(false);
-		plot.getRangeAxis().setAxisLineVisible(false);
-		plot.getRangeAxis().setTickMarksVisible(false);
-		plot.getRangeAxis().setTickLabelPaint(Color.decode("#666666"));
-		plot.getRenderer().setSeriesPaint(0, Color.decode("#4572a7"));
-		
-		//Save Bar Chart
-		ChartUtilities.saveChartAsJPEG(week, chart, 800, 500);
+		return mapCustomerToDay;	
+	}
+	
+	private Map<String, Integer> customersPerDaytime(Instances data) throws Exception{
 		
 		//extract daytime attribute from data
 		Instances einkaufsZeiten = new Instances(data);
-		remove = new Remove();
+		Remove remove = new Remove();
 		remove.setAttributeIndices("7");
 		remove.setInvertSelection(true);
 		remove.setInputFormat(einkaufsZeiten);
 		einkaufsZeiten = Filter.useFilter(einkaufsZeiten, remove);
 		
-		e = einkaufsZeiten.attribute(0).enumerateValues();
+		Enumeration<Object> e = einkaufsZeiten.attribute(0).enumerateValues();
 		Map<String, Integer> mapCustomerToDaytime = new HashMap<>();
 		
 		//Add Values to Map
@@ -162,46 +132,8 @@ public class Analysis implements Serializable{
 			mapCustomerToDaytime.put(e.nextElement().toString(), einkaufsZeiten.attributeStats(0).nominalCounts[i]);
 		}
 		
-		//Insert data into Chart
-		dataset = new DefaultCategoryDataset();
+		return mapCustomerToDaytime;
 		
-		dataset.addValue(mapCustomerToDaytime.get("<10 Uhr"), "", "<10 Uhr");
-		dataset.addValue(mapCustomerToDaytime.get("10-12 Uhr"), "", "10-12 Uhr");
-		dataset.addValue(mapCustomerToDaytime.get("12-14 Uhr"), "", "12-14 Uhr");
-		dataset.addValue(mapCustomerToDaytime.get("14-17 Uhr"), "", "14-17 Uhr");
-		dataset.addValue(mapCustomerToDaytime.get(">17 Uhr"), "", ">17 Uhr");
-		
-		chart = ChartFactory.createBarChart("", "Uhrzeit", "Kunden", dataset);
-		chart.removeLegend();
-		
-		//Change Style of Chart
-	    theme.apply(chart);
-		plot = chart.getCategoryPlot();
-		plot.setOutlineVisible(false);
-		plot.getRangeAxis().setAxisLineVisible(false);
-		plot.getRangeAxis().setTickMarksVisible(false);
-		plot.getRangeAxis().setTickLabelPaint(Color.decode("#666666"));
-		plot.getRenderer().setSeriesPaint(0, Color.decode("#4572a7"));
-		
-		//Save Bar Chart
-		ChartUtilities.saveChartAsJPEG(daytime, chart, 800, 500);		
-		
-	}
-
-	public File getWeekDayChart() {
-		return weekDayChart;
-	}
-
-	public void setWeekDayChart(File weekDayChart) {
-		this.weekDayChart = weekDayChart;
-	}
-
-	public File getDaytimeChart() {
-		return daytimeChart;
-	}
-
-	public void setDaytimeChart(File daytimeChart) {
-		this.daytimeChart = daytimeChart;
 	}
 
 	public List<String> getTopItems() {
@@ -211,7 +143,21 @@ public class Analysis implements Serializable{
 	public void setTopItems(List<String> topItems) {
 		this.topItems = topItems;
 	}
-	
-	
+
+	public Map<String, Integer> getCustomersWeekday() {
+		return customersWeekday;
+	}
+
+	public void setCustomersWeekday(Map<String, Integer> customersWeekday) {
+		this.customersWeekday = customersWeekday;
+	}
+
+	public Map<String, Integer> getCustomersDaytime() {
+		return customersDaytime;
+	}
+
+	public void setCustomersDaytime(Map<String, Integer> customersDaytime) {
+		this.customersDaytime = customersDaytime;
+	}
 	
 }

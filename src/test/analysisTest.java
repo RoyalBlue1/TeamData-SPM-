@@ -17,7 +17,7 @@ public class analysisTest {
 		
 		String csv = getClass().getResource("/testCSV.csv").getFile();
 		
-		analysis = new Analysis(csv,  new File("week.jpg"), new File("daytime.jpg"));
+		analysis = new Analysis(csv);
 		
 		//test top 5 items
 		assertEquals("Kaffee / Tee", analysis.getTopItems().get(0));
