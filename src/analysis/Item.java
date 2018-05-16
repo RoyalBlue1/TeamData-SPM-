@@ -7,14 +7,17 @@ public class Item implements Comparable<Item>{
 	
 	public Item(String name, int n) {
 		
-		String[] s = name.split(" ");
+		//Extract Name form Weka attribute String
+		name = name.replace("@attribute ", "");
+		name = name.replace("\'", "");
+		name = name.replace(" {1}", "");
 		
-		this.name = s[1];
+		this.name = name;
 		this.anzahl = n;
 	}
 	
 	public String toString() {
-		return name + " : " + anzahl;
+		return name;
 	}
 
 	@Override
