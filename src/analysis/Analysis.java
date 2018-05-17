@@ -29,7 +29,7 @@ public class Analysis implements Serializable{
 		topItems = new ArrayList<>();
 	}
 	
-	public Analysis(String csv) throws Exception {
+	public Analysis(InputStream csv) throws Exception {
 		
 		Instances data;
 		List<Item> items;
@@ -37,7 +37,7 @@ public class Analysis implements Serializable{
 		
 		//load CSV-File into Weka
 		CSVLoader loader = new CSVLoader();
-		loader.setSource(new File(csv));
+		loader.setSource(csv);
 		data = loader.getDataSet();	
 		data = numericToNominal(data);
 		
