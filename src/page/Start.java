@@ -30,7 +30,7 @@ public class Start extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String password = (String)request.getParameter("password");
-		if(password.equals("1234")) {
+		if(password!=null && password.equals("1234")) {
 			try {
 			RequestDispatcher view = request.getRequestDispatcher("/DateiHochladen.jsp");
 			view.forward(request, response);
@@ -40,7 +40,7 @@ public class Start extends HttpServlet {
 		}
 		}else {
 			try {
-			RequestDispatcher view = request.getRequestDispatcher("/WrongPassword.jsp");
+			RequestDispatcher view = request.getRequestDispatcher("/falschesPasswort.jsp");
 			view.forward(request, response);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -57,15 +57,5 @@ public class Start extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
-	}
-	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-		PrintWriter out;
-		try {
-			RequestDispatcher view = request.getRequestDispatcher("/DateiHochladen.jsp");
-			view.forward(request, response);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

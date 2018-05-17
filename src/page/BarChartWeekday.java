@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.plot.CategoryPlot;
@@ -45,9 +46,8 @@ public class BarChartWeekday extends HttpServlet {
 		Map<String, Integer> map = ((Analysis) request.getSession().getAttribute("analysis")).getCustomersWeekday();
 		JFreeChart chart = getChart(map);
 		
-		//ChartUtilities.writeChartAsPNG(os, chart, 800, 500);
+		ChartUtilities.writeChartAsPNG(os, chart, 800, 500);
 		
-		ImageIO.write(chart.createBufferedImage(800, 500), "png", os);
 		os.close();
 		
 		}

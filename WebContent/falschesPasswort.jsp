@@ -18,16 +18,16 @@
 		<div style="display: table; margin: auto; margin-top: 20px; max-width: 800px; width: 70%; min-width: 400px;">
 			<div class="card" style="">
 				<div class="card-header">
-					<img src="kauf_dort_logo.png" style="height: 4em;">
+					<img src="img/kauf_dort_logo.png" style="height: 4em;">
 				</div>
 				<div class="card-body">
 					Falsches Passwort
-					<form method="post" action="/Start">
+					<form method="post" action="/TeamData/Start">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<label class="input-group-text">Passwort</label>
 							</div>
-							<input type="password" class="form-control">
+							<input type="password" name="password" class="form-control">
 							<div class="input-group-append">
 								<button class="btn btn-outline-secondary">Login</button>
 							</div>
