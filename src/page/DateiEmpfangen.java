@@ -47,8 +47,7 @@ public class DateiEmpfangen extends HttpServlet {
 		Analysis analysis = null;
 		
 		try {
-			analysis = new Analysis(csvName);
-			System.out.println("analyse");
+			analysis = new Analysis(csvPart.getInputStream());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

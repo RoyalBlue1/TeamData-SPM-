@@ -37,12 +37,12 @@ public class BarChartWeekday extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(request.getSession().getAttribute("Analysis") != null) {
+		if(request.getSession().getAttribute("analysis") != null) {
 		
 		response.setContentType("image/png");
 		
 		OutputStream os = response.getOutputStream();
-		Map<String, Integer> map = ((Analysis) request.getSession().getAttribute("Analysis")).getCustomersWeekday();
+		Map<String, Integer> map = ((Analysis) request.getSession().getAttribute("analysis")).getCustomersWeekday();
 		JFreeChart chart = getChart(map);
 		
 		//ChartUtilities.writeChartAsPNG(os, chart, 800, 500);

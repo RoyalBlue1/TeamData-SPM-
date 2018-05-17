@@ -1,6 +1,7 @@
 package page;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.plot.CategoryPlot;
@@ -40,20 +42,25 @@ public class BarChartDaytime extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(request.getSession().getAttribute("Analysis") != null) {
+		if(request.getSession().getAttribute("analysis") != null) {
 			
 			response.setContentType("image/png");
 			
 			OutputStream os = response.getOutputStream();
-			Map<String, Integer> map = ((Analysis) request.getSession().getAttribute("Analysis")).getCustomersDaytime();
+			Map<String, Integer> map = ((Analysis) request.getSession().getAttribute("analysis")).getCustomersDaytime();
 			JFreeChart chart = getChart(map);
 			
-			//ChartUtilities.writeChartAsPNG(os, chart, 800, 500);
+			File f = new File("day.png");
+			System.out.println(f.getAbsolutePath());
 			
-			ImageIO.write(chart.createBufferedImage(800, 500), "png", os);
+			ChartUtilities.saveChartAsPNG(f, chart, 800, 500);
+			ChartUtilities.writeChartAsPNG(os, chart, 800, 500);
+			
+			//ImageIO.write(chart.createBufferedImage(800, 500), "png", os);
 			os.close();
 			
 		}
+		System.out.println("daytime");
 	}
 
 	/**
