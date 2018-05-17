@@ -22,7 +22,7 @@
 				</div>
 				
 				<div class="sidebar-item sidebar-block">
-					<a class="sidebar-link" href="/TeamData/Start"><i class="fa fa-file"></i> Datei hochladen</a>
+					<a class="sidebar-link" href="DateiHochladen.jsp"><i class="fa fa-file"></i> Datei hochladen</a>
 				</div>
 				<div class="sidebar-block">
 					<div class="sidebar-heading">Letzte Ergebnisse</div>

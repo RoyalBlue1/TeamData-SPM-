@@ -48,26 +48,19 @@ public class BarChartDaytime extends HttpServlet {
 			
 			OutputStream os = response.getOutputStream();
 			Map<String, Integer> map = ((Analysis) request.getSession().getAttribute("analysis")).getCustomersDaytime();
-			JFreeChart chart = getChart(map);
+			JFreeChart chart = getChart(map);			
 			
-			File f = new File("day.png");
-			System.out.println(f.getAbsolutePath());
-			
-			ChartUtilities.saveChartAsPNG(f, chart, 800, 500);
 			ChartUtilities.writeChartAsPNG(os, chart, 800, 500);
 			
-			//ImageIO.write(chart.createBufferedImage(800, 500), "png", os);
 			os.close();
 			
 		}
-		System.out.println("daytime");
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	
