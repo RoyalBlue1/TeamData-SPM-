@@ -29,8 +29,26 @@ public class Start extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String password = (String)request.getParameter("password");
+		if(password.equals("1234")) {
+			try {
+			RequestDispatcher view = request.getRequestDispatcher("/DateiHochladen.jsp");
+			view.forward(request, response);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}else {
+			try {
+			RequestDispatcher view = request.getRequestDispatcher("/WrongPassword.jsp");
+			view.forward(request, response);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+		
+		
 	}
 
 	/**
