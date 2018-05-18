@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import analysis.Analysis;
+import analysis.AnalysisList;
+import analysis.Database;
 
 
 
@@ -43,16 +45,21 @@ public class DateiEmpfangen extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		Part csvPart = request.getPart("file");
-		String csvName = Paths.get(csvPart.getSubmittedFileName()).getFileName().toString();
 		Analysis analysis = null;
+		Database db = Database.getInstance();
 		
 		try {
-			analysis = new Analysis(csvPart.getInputStream());
+			analysis = new Analysis(csvPart.getInputStream(), csvPart.getSubmittedFileName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		request.getSession().setAttribute("analysis", analysis);
+		AnalysisList list = db.getList();
+		list.add(analysis);
+		db.setList(list);
+		
+		request.getSession().setAttribute("list", list);
+		request.getSession().setAttribute("index", 0);
 		
 		RequestDispatcher view = request.getRequestDispatcher("analysis.jsp");
 		view.forward(request, response);

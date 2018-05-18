@@ -22,6 +22,7 @@ import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import analysis.Analysis;
+import analysis.AnalysisList;
 
 /**
  * Servlet implementation class BarChartDaytime
@@ -42,19 +43,21 @@ public class BarChartDaytime extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(request.getSession().getAttribute("analysis") != null) {
+		if(request.getSession().getAttribute("list") != null) {
 			
 			response.setContentType("image/png");
 			
 			OutputStream os = response.getOutputStream();
-			Map<String, Integer> map = ((Analysis) request.getSession().getAttribute("analysis")).getCustomersDaytime();
-			JFreeChart chart = getChart(map);			
+			AnalysisList list = (AnalysisList) request.getSession().getAttribute("list");
+			int index = (Integer) request.getSession().getAttribute("index");
+			Map<String, Integer> map = list.getAnalysisAt(index).getCustomersDaytime();
+			JFreeChart chart = getChart(map);
 			
 			ChartUtilities.writeChartAsPNG(os, chart, 800, 500);
 			
 			os.close();
 			
-		}
+			}
 	}
 
 	/**

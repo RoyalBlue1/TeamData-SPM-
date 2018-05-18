@@ -13,6 +13,7 @@
 		<script src="js/bootstrap.js"></script>
 
 		<title>Kauf Dort - Index</title>
+		<jsp:useBean id = "list" class = "analysis.AnalysisList" scope="session" />
 	</head>
 	<body>
 		<div class="wrapper">
@@ -26,21 +27,16 @@
 				</div>
 				<div class="sidebar-block">
 					<div class="sidebar-heading">Letzte Ergebnisse</div>
-					<div class="sidebar-item">
-						<a class="sidebar-link" href=""><i class="fa fa-angle-right"></i> 1. Test</a>
-					</div>
-					<div class="sidebar-item">
-						<a class="sidebar-link" href=""><i class="fa fa-angle-right"></i> 2. Test</a>
-					</div>
-					<div class="sidebar-item">
-						<a class="sidebar-link" href=""><i class="fa fa-angle-right"></i> 3. Test</a>
-					</div>
-					<div class="sidebar-item">
-						<a class="sidebar-link" href=""><i class="fa fa-angle-right"></i> 4. Test</a>
-					</div>
-					<div class="sidebar-item">
-						<a class="sidebar-link" href=""><i class="fa fa-angle-right"></i> 5. Test</a>
-					</div>
+					<% for(int i=0; i<list.getList().size(); i++){ %>
+					
+						<form action="/TeamData/LoadAnalysis" method="post">
+							<input type="hidden" name="index" value="<%= i %>">
+							<div class="sidebar-item">
+								<button type="submit" class="sidebar-link" style="background: none; color: inherit; border: none; display: block; width:100%; text-align: left;"><i class="fa fa-angle-right"></i> <%=(i+1) + ". " + list.getList().get(i).getName() %></button>
+							</div>
+						</form>
+					
+					<% } %>
 				</div>
 				<div class="sidebar-item sidebar-block">
 					<a class="sidebar-link" href=""><i class="fa fa-power-off"></i> Logout</a>

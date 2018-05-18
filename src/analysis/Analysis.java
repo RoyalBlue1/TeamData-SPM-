@@ -22,15 +22,18 @@ public class Analysis implements Serializable{
 	List<String> topItems;
 	Map<String, Integer> customersWeekday;
 	Map<String, Integer> customersDaytime;
+	String name;
 	
 	public Analysis() {
 		customersDaytime = new HashMap<>();
 		customersWeekday = new HashMap<>();
 		topItems = new ArrayList<>();
+		name = "Default";
 	}
 	
-	public Analysis(InputStream csv) throws Exception {
+	public Analysis(InputStream csv, String name) throws Exception {
 		
+		this.name = name;
 		Instances data;
 		List<Item> items;
 		topItems = new ArrayList<>();
@@ -158,6 +161,14 @@ public class Analysis implements Serializable{
 
 	public void setCustomersDaytime(Map<String, Integer> customersDaytime) {
 		this.customersDaytime = customersDaytime;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

@@ -18,7 +18,7 @@ public class analysisTest {
 		
 		InputStream csv = new FileInputStream(getClass().getResource("/testCSV.csv").getFile());
 		
-		analysis = new Analysis(csv);		
+		analysis = new Analysis(csv, "");		
 		
 		//test top 5 items
 		assertEquals("Kaffee / Tee", analysis.getTopItems().get(0));
@@ -34,7 +34,7 @@ public class analysisTest {
 		
 		InputStream csv = new FileInputStream(getClass().getResource("/testCSV.csv").getFile());
 		
-		analysis = new Analysis(csv);
+		analysis = new Analysis(csv, "");
 		
 		Map<String, Integer> mapWeek = analysis.getCustomersWeekday();
 		
@@ -53,7 +53,7 @@ public class analysisTest {
 		
 		InputStream csv = new FileInputStream(getClass().getResource("/testCSV.csv").getFile());
 		
-		analysis = new Analysis(csv);
+		analysis = new Analysis(csv, "");
 		
 		Map<String, Integer> mapDaytime = analysis.getCustomersDaytime();
 		

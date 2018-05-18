@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import analysis.Database;
+
 /**
  * Servlet implementation class Start
  */
@@ -32,6 +34,7 @@ public class Start extends HttpServlet {
 		String password = (String)request.getParameter("password");
 		if(password!=null && password.equals("1234")) {
 			try {
+				request.getSession().setAttribute("list", Database.getInstance().getList());
 			RequestDispatcher view = request.getRequestDispatcher("/DateiHochladen.jsp");
 			view.forward(request, response);
 		} catch (IOException e) {
