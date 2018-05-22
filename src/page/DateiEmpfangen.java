@@ -52,6 +52,7 @@ public class DateiEmpfangen extends HttpServlet {
 		try {
 			analysis = new Analysis(csvPart.getInputStream(), csvPart.getSubmittedFileName());
 		} catch (Exception e) {
+			System.out.println(e.toString());
 			RequestDispatcher view = request.getRequestDispatcher("DateiHochladenError.jsp");
 			view.forward(request, response);
 			error = true;

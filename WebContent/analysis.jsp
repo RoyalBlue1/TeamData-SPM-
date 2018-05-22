@@ -30,7 +30,7 @@
 				</div>
 				<div class="sidebar-block">
 					<div class="sidebar-heading">Letzte Ergebnisse</div>
-					<% for(int i=0; i<list.getList().size(); i++){ %>
+					<% for(int i=0;i<list.getList().size(); i++){ %>
 					
 						<form action="/TeamData/LoadAnalysis" method="post">
 							<input type="hidden" name="index" value="<%= i %>">
@@ -42,7 +42,7 @@
 					<% } %>
 				</div>
 				<div class="sidebar-item sidebar-block">
-					<a class="sidebar-link" href=""><i class="fa fa-power-off"></i> Logout</a>
+					<a class="sidebar-link" href="/TeamData/Login.jsp"><i class="fa fa-power-off"></i> Logout</a>
 				</div>
 			</div>
 		
@@ -58,7 +58,7 @@
 						</li>
 						<% int index = (Integer)request.getSession().getAttribute("index"); %>
 						<% Analysis analysis = list.getAnalysisAt(index); %>
-						<% for(int i=0; i<analysis.getTopItems().size(); i++){ %>
+						<% for(int i=0;i<analysis.getTopItems().size(); i++){ %>
 						
 							<li class="list-group-item">
 								<h5><%= (i+1) + ". " + analysis.getTopItems().get(i) %></h5>

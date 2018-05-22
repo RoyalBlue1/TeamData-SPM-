@@ -90,11 +90,11 @@ public class Analysis implements Serializable{
 		
 		ArrayList<Item> items = new ArrayList<>();
 		
+		
 		//Get items out of Data
 		for(int i = 7; i < 24; i++) {
-			items.add(new Item(data.attribute(i).toString(), data.attributeStats(i).nominalCounts[0]));
+			items.add(new Item(data.attribute(i).name(), data.attributeStats(i).totalCount - data.attributeStats(i).missingCount));
 		}
-		
 		
 		Collections.sort(items);
 		
@@ -102,7 +102,7 @@ public class Analysis implements Serializable{
 		for(int i=items.size()-1; i>4; i--) {
 			items.remove(i);
 		}
-		
+
 		return items;
 		
 	}

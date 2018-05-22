@@ -38,7 +38,7 @@
 					<% } %>
 				</div>
 				<div class="sidebar-item sidebar-block">
-					<a class="sidebar-link" href=""><i class="fa fa-power-off"></i> Logout</a>
+					<a class="sidebar-link" href="/TeamData/Login.jsp"><i class="fa fa-power-off"></i> Logout</a>
 				</div>
 			</div>
 		
