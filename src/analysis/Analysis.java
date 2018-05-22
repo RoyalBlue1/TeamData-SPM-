@@ -1,5 +1,7 @@
 package analysis;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -34,15 +36,23 @@ public class Analysis implements Serializable{
 	public Analysis(InputStream csv, String name) throws Exception {
 		
 		this.name = name;
-		Instances data;
+		Instances data = null;
 		List<Item> items;
 		topItems = new ArrayList<>();
 		
 		//load CSV-File into Weka
-		CSVLoader loader = new CSVLoader();
-		loader.setSource(csv);
-		data = loader.getDataSet();	
-		data = numericToNominal(data);
+		CSVLoader loader = new CSVLoader();		
+		try {
+			loader.setSource(csv);
+			data = loader.getDataSet();	
+			data = numericToNominal(data);
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		if(data.isEmpty()) {
+			throw new Exception();
+		}
 		
 		//get Top 5 items from data
 		items = getTop5Items(data);

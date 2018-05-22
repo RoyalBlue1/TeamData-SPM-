@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import analysis.Database;
+
 /**
  * Servlet implementation class LoadAnalysis
  */
@@ -27,11 +29,13 @@ public class LoadAnalysis extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getSession().setAttribute("index", Integer.valueOf(request.getParameter("index")));
-		
-		RequestDispatcher view = request.getRequestDispatcher("analysis.jsp");
-		view.forward(request, response);
-		
+		Integer index = Integer.parseInt(request.getParameter("index"));
+				
+		if(index != null) {
+			request.getSession().setAttribute("index", (int)index);
+			RequestDispatcher view = request.getRequestDispatcher("analysis.jsp");
+			view.forward(request, response);
+		}		
 	}
 
 	/**

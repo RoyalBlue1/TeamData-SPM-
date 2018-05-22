@@ -47,23 +47,28 @@ public class DateiEmpfangen extends HttpServlet {
 		Part csvPart = request.getPart("file");
 		Analysis analysis = null;
 		Database db = Database.getInstance();
+		boolean error = false;
 		
 		try {
 			analysis = new Analysis(csvPart.getInputStream(), csvPart.getSubmittedFileName());
 		} catch (Exception e) {
-			e.printStackTrace();
+			RequestDispatcher view = request.getRequestDispatcher("DateiHochladenError.jsp");
+			view.forward(request, response);
+			error = true;
 		}
 		
-		AnalysisList list = db.getList();
-		list.add(analysis);
-		db.setList(list);
-		
-		request.getSession().setAttribute("list", list);
-		request.getSession().setAttribute("index", 0);
-		
-		RequestDispatcher view = request.getRequestDispatcher("analysis.jsp");
-		view.forward(request, response);
-		
+		if(!error) {
+			AnalysisList list = db.getList();
+			list.add(analysis);
+			db.setList(list);
+			
+			request.getSession().setAttribute("list", list);
+			request.getSession().setAttribute("index", 0);
+			
+			
+			RequestDispatcher view = request.getRequestDispatcher("analysis.jsp");
+			view.forward(request, response);
+		}
 	}
 
 	/**

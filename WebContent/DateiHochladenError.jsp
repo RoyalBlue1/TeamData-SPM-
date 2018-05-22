@@ -45,6 +45,10 @@
 			<div class="main bg-white">
 				<div class="content">
 					<h2>Willkommen bei der Datenanalyse für Kauf Dort</h2>
+					<div class="alert alert-danger">
+     					Die Datei muss eine CSV Datei sein und darf nicht leer sein.
+      				</div>
+					
 					<form method="post" action="/TeamData/DateiEmpfangen" enctype="multipart/form-data">
 						<div class="input-group">
 							<div class="custom-file">
