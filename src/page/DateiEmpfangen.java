@@ -1,12 +1,6 @@
 package page;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -44,15 +38,15 @@ public class DateiEmpfangen extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		Part csvPart = request.getPart("file");
+		Part csvPart = null;
 		Analysis analysis = null;
 		Database db = Database.getInstance();
 		boolean error = false;
 		
 		try {
+			csvPart = request.getPart("file");
 			analysis = new Analysis(csvPart.getInputStream(), csvPart.getSubmittedFileName());
 		} catch (Exception e) {
-			System.out.println(e.toString());
 			RequestDispatcher view = request.getRequestDispatcher("DateiHochladenError.jsp");
 			view.forward(request, response);
 			error = true;

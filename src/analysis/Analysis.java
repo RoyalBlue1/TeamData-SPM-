@@ -6,11 +6,19 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import weka.associations.Apriori;
+import weka.associations.AssociationRule;
+import weka.associations.AssociationRules;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 import weka.filters.Filter;
@@ -18,6 +26,10 @@ import weka.filters.unsupervised.attribute.NumericCleaner;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.Remove;
 
+/**
+ * @author Kai
+ *
+ */
 public class Analysis implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -25,6 +37,7 @@ public class Analysis implements Serializable{
 	Map<String, Integer> customersWeekday;
 	Map<String, Integer> customersDaytime;
 	String name;
+	List<String> itemSets;
 	
 	public Analysis() {
 		customersDaytime = new HashMap<>();
@@ -65,6 +78,10 @@ public class Analysis implements Serializable{
 		
 		//get customers per daytime
 		customersDaytime = customersPerDaytime(data);
+		
+		//Häufig zusammmengekaufte Waren
+		itemSets = searchForItemSets(data);
+		
 		
 	}
 	
@@ -148,6 +165,76 @@ public class Analysis implements Serializable{
 		return mapCustomerToDaytime;
 		
 	}
+	
+	private List<String> searchForItemSets(Instances data){
+		
+		Set<String> itemSetsSet = new HashSet<>();
+		List<String> itemSets = new ArrayList<>();
+		
+		// Apriori anwenden
+
+			// Kundendaten rausnehmen, nur Warenkörbe stehen lassen
+			Instances onlyItems = new Instances(data);
+			for (int i = 0; i < 7; i++) {
+				onlyItems.deleteAttributeAt(0); // ein einzelnes Attribut rausnehmen
+			}
+			
+			Apriori warenModel = new Apriori();
+			
+			
+			//warenModel.setNumRules(10); // die besten drei Ergebnisse
+	
+			try {
+				warenModel.buildAssociations(onlyItems);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			AssociationRules list = warenModel.getAssociationRules();
+			
+			//Alle generierten Regeln durchgehen
+			for(AssociationRule rule: list.getRules()) {
+				ArrayList<String> set = new ArrayList<>();
+				String s = rule.getPremise().toString();
+				s = s.replaceAll("=1", "");
+				s = s.replace("[", "");
+				s = s.replace("]", "");
+				s = s.replaceAll(" ", "");
+				String[] split = s.split(",");
+				set.addAll(Arrays.asList(split));
+			
+				s = rule.getConsequence().toString();
+				s = s.replaceAll("=1", "");
+				s = s.replace("[", "");
+				s = s.replace("]", "");
+				s = s.replaceAll(" ", "");
+				split = s.split(",");
+				set.addAll(Arrays.asList(split));
+				
+				Collections.sort(set);
+				
+				s = "";
+				for(String item: set) {
+					int index = set.indexOf(item);
+					if(index==set.size()-1) {
+						s += " und " + item;
+					}else if(index==0){
+						s += item;
+					}else{
+						s += ", " + item;
+					}
+					
+				}
+				
+				itemSetsSet.add(s);
+			}
+			
+			for(String s: itemSetsSet) {
+				itemSets.add(s);
+			}
+			
+			return itemSets;
+	}
 
 	public List<String> getTopItems() {
 		return topItems;
@@ -179,6 +266,14 @@ public class Analysis implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<String> getItemSets() {
+		return itemSets;
+	}
+
+	public void setItemSets(List<String> itemSets) {
+		this.itemSets = itemSets;
 	}
 	
 }
