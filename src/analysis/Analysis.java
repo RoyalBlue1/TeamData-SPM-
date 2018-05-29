@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import weka.associations.Apriori;
 import weka.associations.AssociationRule;
 import weka.associations.AssociationRules;
@@ -38,6 +40,7 @@ public class Analysis implements Serializable{
 	Map<String, Integer> customersDaytime;
 	String name;
 	List<String> itemSets;
+	List<String> recommendations;
 	
 	public Analysis() {
 		customersDaytime = new HashMap<>();
@@ -82,7 +85,33 @@ public class Analysis implements Serializable{
 		//Häufig zusammmengekaufte Waren
 		itemSets = searchForItemSets(data);
 		
+		//generate marketing recommendations
+		recommendations = generateRecommendations(data);
 		
+	}
+	
+	private List<String> generateRecommendations(Instances data){
+		List<String> recommendation = new ArrayList<>();
+		String age = "";
+		Enumeration<Object> e = data.attribute(1).enumerateValues();
+		int[] attributeCounts = data.attributeStats(1).nominalCounts;
+		List<AgeGroup> ageGroup = new ArrayList<>();
+		int i = 0;
+		
+		while(e.hasMoreElements()) {
+		
+			ageGroup.add(new AgeGroup(e.nextElement().toString(), attributeCounts[i]));
+			i++;
+			
+		}
+		
+		Collections.sort(ageGroup);
+		age = ageGroup.get(0).name;
+		
+		recommendation.add("Das Marketing sollte sich an die Altersgruppe " + age + " richten, da diese ihre größte Käuferschicht bilden.");
+		recommendation.add(itemSets.get(0) + " sollten als Paket Angeboten werden, da sie häufig zusammen gekauft werden.");
+		
+		return recommendation;
 	}
 	
 	private Instances numericToNominal(Instances data) throws Exception {
@@ -274,6 +303,14 @@ public class Analysis implements Serializable{
 
 	public void setItemSets(List<String> itemSets) {
 		this.itemSets = itemSets;
+	}
+
+	public List<String> getRecommendations() {
+		return recommendations;
+	}
+
+	public void setRecommendations(List<String> recommendations) {
+		this.recommendations = recommendations;
 	}
 	
 }

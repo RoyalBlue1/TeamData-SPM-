@@ -98,6 +98,19 @@
 						<% } %>
 					</ul>
 					
+					<ul class="list-group" style="padding-bottom: 20px;">
+						<li class="list-group-item list-group-item-secondary">
+							<h4>Marketing Empfehlungen</h4>
+						</li>
+						<% for(int i=0;i<analysis.getRecommendations().size(); i++){ %>
+						
+							<li class="list-group-item">
+								<h5><%=analysis.getRecommendations().get(i) %></h5>
+							</li>
+						
+						<% } %>
+					</ul>
+					
 				</div>
 			</div>
 		</div>	
