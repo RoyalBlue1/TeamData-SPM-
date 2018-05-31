@@ -5,7 +5,7 @@ package analysis;
  * @author alex-
  * @version 1
  * 
- * Klasse die die Altersgruppen unterteilt
+ * Klasse die die Altergruppen unterteilt
  */
 
 public class AgeGroup implements Comparable<AgeGroup>{
