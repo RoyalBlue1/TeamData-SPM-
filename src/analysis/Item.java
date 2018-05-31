@@ -1,9 +1,23 @@
 package analysis;
 
+/**
+ * 
+ * @author alex-
+ * @version 1
+ * 
+ * Klasse um Items aus Weka zu entnehmen
+ */
+
 public class Item implements Comparable<Item>{
 
 	String name;
 	int anzahl;
+	
+	/**
+	 * Modifizierung der Attribute aus Weka
+	 * @param name
+	 * @param n
+	 */
 	
 	public Item(String name, int n) {
 		
