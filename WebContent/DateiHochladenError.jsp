@@ -1,27 +1,34 @@
 <!doctype html>
+<!--  
+  	Seite für den Upload von CSV dateien mit Error Code
+  	Hier können CSV Dateien über den Dateimanager ausgewählt und hochgeladen werden -->
 <html lang="de">
 	<head>
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+		<!--  Verlinken der CSS Dateien-->
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/fontawesome-all.css">
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 
+	<!-- Hinzufügen der Skripte -->
 		<script src="js/jquery.js"></script>
 		<script src="js/bootstrap.js"></script>
 
 		<title>Kauf Dort - Index</title>
 		<jsp:useBean id = "list" class = "analysis.AnalysisList" scope="session" />
 	</head>
+	<!-- Grundgerüst der Upload-Seite -->
 	<body>
+		<!-- Logo der Firma Kauf Dort -->
 		<div class="wrapper">
 			<div class="sidenav bg-light">
 				<div class="sidebar-top">
 					<img class="logo" src="img/kauf_dort_logo.png">
 				</div>
-				
+				<!-- Menü -->
 				<div class="sidebar-item sidebar-block">
 					<a class="sidebar-link" href="DateiHochladen.jsp"><i class="fa fa-file"></i> Datei hochladen</a>
 				</div>
@@ -41,10 +48,13 @@
 					<a class="sidebar-link" href="/TeamData/Login.jsp"><i class="fa fa-power-off"></i> Logout</a>
 				</div>
 			</div>
-		
+			
+			<!-- Dateiauswahl, bestehend aus einem Button der den Dateimanager zur Auswahl öffnet 
+			 *und ein Button für die Bestätigung der Auswahl  -->
 			<div class="main bg-white">
 				<div class="content">
 					<h2>Willkommen bei der Datenanalyse für Kauf Dort</h2>
+					//Error Message
 					<div class="alert alert-danger">
      					Die Datei muss eine CSV Datei sein und darf nicht leer sein.
       				</div>
