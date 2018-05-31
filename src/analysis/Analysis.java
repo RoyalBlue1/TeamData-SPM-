@@ -6,11 +6,21 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
+import weka.associations.Apriori;
+import weka.associations.AssociationRule;
+import weka.associations.AssociationRules;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 import weka.filters.Filter;
@@ -19,52 +29,33 @@ import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.Remove;
 
 /**
- * 
- * @author alex-
- * @version 1.0
+ * @author Kai
  *
  */
 public class Analysis implements Serializable{
-/**
- * Analyse der Daten aus der CSV-Datei
- * Anlegen einer Liste für meistgekaufte Artikel
- * Anlegen von Maps für Besucher 
- * 	Besucher pro Tag / Besucher zu welcher Zeit
- */
+
 	private static final long serialVersionUID = 1L;
 	List<String> topItems;
 	Map<String, Integer> customersWeekday;
 	Map<String, Integer> customersDaytime;
 	String name;
+	List<String> itemSets;
+	List<String> recommendations;
 	
-/**
- * Aus den Maps werden HashMaps
- * Die Liste wird zu einer Arrayliste
- */
 	public Analysis() {
 		customersDaytime = new HashMap<>();
 		customersWeekday = new HashMap<>();
 		topItems = new ArrayList<>();
 		name = "Default";
 	}
-
-	/**
-	 * 
-	 * @param csv
-	 * @param name
-	 * @throws Exception
-	 */
+	
 	public Analysis(InputStream csv, String name) throws Exception {
 		
 		this.name = name;
 		Instances data = null;
 		List<Item> items;
 		topItems = new ArrayList<>();
-/**
- * Inititalisiere CSV loader
- * Es wird versucht, Daten aus einer CSV-Datei zu laden
- * Tritt ein Fehler auf, wird Exeption e ausgegeben		
- */
+		
 		//load CSV-File into Weka
 		CSVLoader loader = new CSVLoader();		
 		try {
@@ -74,9 +65,7 @@ public class Analysis implements Serializable{
 		} catch (Exception e) {
 			throw e;
 		}
-/**
- * Schmeißt eine Exception wenn keine Datei ausgewählt wurde		
- */
+		
 		if(data.isEmpty()) {
 			throw new Exception();
 		}
@@ -93,14 +82,37 @@ public class Analysis implements Serializable{
 		//get customers per daytime
 		customersDaytime = customersPerDaytime(data);
 		
+		//Häufig zusammmengekaufte Waren
+		itemSets = searchForItemSets(data);
+		
+		//generate marketing recommendations
+		recommendations = generateRecommendations(data);
+		
 	}
 	
-	/**
-	 * 
-	 * @param data
-	 * @return
-	 * @throws Exception
-	 */
+	private List<String> generateRecommendations(Instances data){
+		List<String> recommendation = new ArrayList<>();
+		String age = "";
+		Enumeration<Object> e = data.attribute(1).enumerateValues();
+		int[] attributeCounts = data.attributeStats(1).nominalCounts;
+		List<AgeGroup> ageGroup = new ArrayList<>();
+		int i = 0;
+		
+		while(e.hasMoreElements()) {
+		
+			ageGroup.add(new AgeGroup(e.nextElement().toString(), attributeCounts[i]));
+			i++;
+			
+		}
+		
+		Collections.sort(ageGroup);
+		age = ageGroup.get(0).name;
+		
+		recommendation.add("Das Marketing sollte sich an die Altersgruppe " + age + " richten, da diese ihre größte Käuferschicht bilden.");
+		recommendation.add(itemSets.get(0) + " sollten als Paket Angeboten werden, da sie häufig zusammen gekauft werden.");
+		
+		return recommendation;
+	}
 	
 	private Instances numericToNominal(Instances data) throws Exception {
 		
@@ -119,12 +131,6 @@ public class Analysis implements Serializable{
 		return Filter.useFilter(data, num2nom);
 		
 	}
-	
-	/**
-	 * 
-	 * @param data
-	 * @return
-	 */
 	
 	private List<Item> getTop5Items(Instances data){
 		
@@ -147,13 +153,6 @@ public class Analysis implements Serializable{
 		
 	}
 	
-	/**
-	 * 
-	 * @param data
-	 * @return
-	 * @throws Exception
-	 */
-	
 	private Map<String, Integer> customersPerWeekday(Instances data) throws Exception {
 		//extract weekday attribute from data
 		Instances einkaufsTage = new Instances(data);
@@ -173,13 +172,6 @@ public class Analysis implements Serializable{
 		
 		return mapCustomerToDay;	
 	}
-	
-	/**
-	 * 
-	 * @param data
-	 * @return
-	 * @throws Exception
-	 */
 	
 	private Map<String, Integer> customersPerDaytime(Instances data) throws Exception{
 		
@@ -201,6 +193,76 @@ public class Analysis implements Serializable{
 		
 		return mapCustomerToDaytime;
 		
+	}
+	
+	private List<String> searchForItemSets(Instances data){
+		
+		Set<String> itemSetsSet = new HashSet<>();
+		List<String> itemSets = new ArrayList<>();
+		
+		// Apriori anwenden
+
+			// Kundendaten rausnehmen, nur Warenkörbe stehen lassen
+			Instances onlyItems = new Instances(data);
+			for (int i = 0; i < 7; i++) {
+				onlyItems.deleteAttributeAt(0); // ein einzelnes Attribut rausnehmen
+			}
+			
+			Apriori warenModel = new Apriori();
+			
+			
+			//warenModel.setNumRules(10); // die besten drei Ergebnisse
+	
+			try {
+				warenModel.buildAssociations(onlyItems);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			AssociationRules list = warenModel.getAssociationRules();
+			
+			//Alle generierten Regeln durchgehen
+			for(AssociationRule rule: list.getRules()) {
+				ArrayList<String> set = new ArrayList<>();
+				String s = rule.getPremise().toString();
+				s = s.replaceAll("=1", "");
+				s = s.replace("[", "");
+				s = s.replace("]", "");
+				s = s.replaceAll(" ", "");
+				String[] split = s.split(",");
+				set.addAll(Arrays.asList(split));
+			
+				s = rule.getConsequence().toString();
+				s = s.replaceAll("=1", "");
+				s = s.replace("[", "");
+				s = s.replace("]", "");
+				s = s.replaceAll(" ", "");
+				split = s.split(",");
+				set.addAll(Arrays.asList(split));
+				
+				Collections.sort(set);
+				
+				s = "";
+				for(String item: set) {
+					int index = set.indexOf(item);
+					if(index==set.size()-1) {
+						s += " und " + item;
+					}else if(index==0){
+						s += item;
+					}else{
+						s += ", " + item;
+					}
+					
+				}
+				
+				itemSetsSet.add(s);
+			}
+			
+			for(String s: itemSetsSet) {
+				itemSets.add(s);
+			}
+			
+			return itemSets;
 	}
 
 	public List<String> getTopItems() {
@@ -233,6 +295,22 @@ public class Analysis implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<String> getItemSets() {
+		return itemSets;
+	}
+
+	public void setItemSets(List<String> itemSets) {
+		this.itemSets = itemSets;
+	}
+
+	public List<String> getRecommendations() {
+		return recommendations;
+	}
+
+	public void setRecommendations(List<String> recommendations) {
+		this.recommendations = recommendations;
 	}
 	
 }

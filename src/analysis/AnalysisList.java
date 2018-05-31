@@ -3,18 +3,8 @@ package analysis;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-/**
- * 
- * @author alex-
- * @version 1
- *
- *Klasse zum Analysieren der Daten
- */
-public class AnalysisList implements Serializable{
 
-	/**
-	 * Anlegen einer statischen Liste
-	 */
+public class AnalysisList implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	private static List<Analysis> list;
@@ -48,11 +38,6 @@ public class AnalysisList implements Serializable{
 		
 	}
 
-	/**
-	 * Getter under Setter Klasse für list
-	 * @return einer Liste
-	 */
-	
 	public List<Analysis> getList() {
 		return list;
 	}
