@@ -29,9 +29,11 @@ import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.Remove;
 
 /**
- * @author Kai
- *
+ * Analyse der Daten aus Weka
+ * 
+ * @author Kai Blokker
  */
+
 public class Analysis implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -48,6 +50,14 @@ public class Analysis implements Serializable{
 		topItems = new ArrayList<>();
 		name = "Default";
 	}
+	
+	/**
+	 * Konstruktor, der die Analyse ausführt
+	 * 
+	 * @param csv InputStream einer CSV-Datei
+	 * @param name Name der Datei als String
+	 * @throws Exception
+	 */
 	
 	public Analysis(InputStream csv, String name) throws Exception {
 		
@@ -90,6 +100,13 @@ public class Analysis implements Serializable{
 		
 	}
 	
+	/**
+	 * Generiert die Msrketingempfehlungen aus den gegebenen Daten.
+	 * 
+	 * @param data Weka Instance
+	 * @return Liste der Empfehlungen
+	 */
+	
 	private List<String> generateRecommendations(Instances data){
 		List<String> recommendation = new ArrayList<>();
 		String age = "";
@@ -114,6 +131,14 @@ public class Analysis implements Serializable{
 		return recommendation;
 	}
 	
+	/**
+	 * Wandelt numerische Werte in den Daten zu nominale Werte um.
+	 * 
+	 * 
+	 * @param data Weka Instance
+	 * @throws Exception
+	 */
+	
 	private Instances numericToNominal(Instances data) throws Exception {
 		
 		// 0 durch ? ersetzen, um für die Auswertung nur die Waren zu
@@ -131,6 +156,12 @@ public class Analysis implements Serializable{
 		return Filter.useFilter(data, num2nom);
 		
 	}
+	
+	/**
+	 * Ermittelt die Top 5 Waren.
+	 * @param data Weka Instance
+	 * @return Liste mit den Top 5 Waren
+	 */
 	
 	private List<Item> getTop5Items(Instances data){
 		
@@ -153,6 +184,14 @@ public class Analysis implements Serializable{
 		
 	}
 	
+	
+	/**
+	 * Gibt eine Map mit den Kunden pro Wochentag zurück.
+	 * 
+	 * @param data Weka Instance
+	 * @return Map mit den Kunden pro Wochentag
+	 * @throws Exception
+	 */
 	private Map<String, Integer> customersPerWeekday(Instances data) throws Exception {
 		//extract weekday attribute from data
 		Instances einkaufsTage = new Instances(data);
@@ -173,6 +212,13 @@ public class Analysis implements Serializable{
 		return mapCustomerToDay;	
 	}
 	
+	/**
+	 * Gibt eine Map mit den Kunden pro Uhrzeit zurück.
+	 * 
+	 * @param data Weka Instance
+	 * @return Map mit den Kunden pro Uhrzeit
+	 * @throws Exception
+	 */
 	private Map<String, Integer> customersPerDaytime(Instances data) throws Exception{
 		
 		//extract daytime attribute from data
@@ -195,6 +241,13 @@ public class Analysis implements Serializable{
 		
 	}
 	
+	
+	/**
+	 * Gibt die Liste der zusammen gekauften Waren zurück.
+	 * 
+	 * @param data Weka Instance
+	 * @return Liste der zusammen gekauften Waren
+	 */
 	private List<String> searchForItemSets(Instances data){
 		
 		Set<String> itemSetsSet = new HashSet<>();

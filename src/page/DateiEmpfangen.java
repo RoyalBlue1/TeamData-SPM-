@@ -18,6 +18,8 @@ import analysis.Database;
 
 /**
  * Servlet implementation class DateiEmpfangen
+ * 
+ * @author Malte Hörmeyer
  */
 @WebServlet("/DateiEmpfangen")
 @MultipartConfig(	fileSizeThreshold=1024*1024*2,	//2  MB

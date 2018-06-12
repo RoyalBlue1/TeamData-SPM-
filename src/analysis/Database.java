@@ -6,6 +6,12 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * 
+ * @author Kai Blokker
+ *
+ */
+
 public class Database {
 
 	private static Database database;

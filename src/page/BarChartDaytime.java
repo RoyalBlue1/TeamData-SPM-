@@ -26,6 +26,8 @@ import analysis.AnalysisList;
 
 /**
  * Servlet implementation class BarChartDaytime
+ * 
+ * @author Kai Blokker
  */
 @WebServlet("/BarChartDaytime")
 public class BarChartDaytime extends HttpServlet {

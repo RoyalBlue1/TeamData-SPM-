@@ -1,5 +1,11 @@
 package analysis;
 
+/**
+ * In dieser Klasse werden die Kunden in Altersgruppen unterteilt
+ * 
+ * @author Kai Blokker
+ */
+
 public class AgeGroup implements Comparable<AgeGroup>{
 	
 	String name;

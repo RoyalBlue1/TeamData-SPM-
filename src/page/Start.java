@@ -14,6 +14,8 @@ import analysis.Database;
 
 /**
  * Servlet implementation class Start
+ * 
+ * @author Malte Hörmeyer
  */
 @WebServlet("/Start")
 public class Start extends HttpServlet {

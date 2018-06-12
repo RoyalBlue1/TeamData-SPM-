@@ -23,6 +23,8 @@ import analysis.AnalysisList;
 
 /**
  * Servlet implementation class BarChartWeekday
+ * 
+ * @author Kai Blokker
  */
 @WebServlet("/BarChartWeekday")
 public class BarChartWeekday extends HttpServlet {

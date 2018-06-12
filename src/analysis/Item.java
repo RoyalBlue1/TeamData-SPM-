@@ -1,5 +1,11 @@
 package analysis;
 
+/**
+ * 
+ * @author Kai Blokker
+ *
+ */
+
 public class Item implements Comparable<Item>{
 
 	String name;

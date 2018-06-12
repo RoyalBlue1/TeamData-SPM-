@@ -4,6 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Kai Blokker
+ *
+ */
+
 public class AnalysisList implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -17,6 +23,12 @@ public class AnalysisList implements Serializable{
 		return list.get(index);
 	}
 	
+	
+	/**
+	 * Fügt eine neue Analyse der Liste der letzten 5 Analysen hinzu.
+	 * 
+	 * @param a Analyse
+	 */
 	public void add(Analysis a) {
 		List<Analysis> copy = new ArrayList<>();
 		

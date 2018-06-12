@@ -13,6 +13,8 @@ import analysis.Database;
 
 /**
  * Servlet implementation class LoadAnalysis
+ * 
+ * @author Kai Blokker
  */
 @WebServlet("/LoadAnalysis")
 public class LoadAnalysis extends HttpServlet {
